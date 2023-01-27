@@ -27,7 +27,12 @@ export const PokemonCard: FC<Props> = ({ pokemon }) => {
             <Text>{id}</Text>
           </Row>
         </Card.Footer>
-        <Button onPress={handleOnClick} size={"sm"} color="success">
+        <Button
+          onPress={handleOnClick}
+          size={"xs"}
+          css={{ margin: "8px" }}
+          color="success"
+        >
           Ver
         </Button>
       </Card>

@@ -67,12 +67,24 @@ const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
         <Grid xs={12} sm={7}>
           <Card>
             <Card.Header
-              css={{ display: "flex", justifyContent: "space-between" }}
+              css={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
             >
-              <Text transform="capitalize" h1>
+              <Text
+                size={24}
+                css={{
+                  marginLeft: -3,
+                  marginRight: 10,
+                }}
+                transform="capitalize"
+                h1
+              >
                 {pokemon.name}
               </Text>
               <Button
+                size={"sm"}
                 onPress={onToggleFavorites}
                 color={isInFavorite ? "warning" : "success"}
                 ghost={!isInFavorite}
@@ -125,7 +137,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
     paths: data.results.map((pokemon) => ({
       params: { name: pokemon.name },
     })),
-    fallback: false,
+    // fallback: false,
+    fallback: "blocking",
   };
 };
 
@@ -134,10 +147,20 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const pokemon = await getPokemonInfo(name);
 
+  if (!pokemon) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
   https: return {
     props: {
       pokemon,
-    }, // will be passed to the page component as props
+    },
+    revalidate: 86400, //60 * 60 * 24,
   };
 };
 

@@ -3,7 +3,6 @@ import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
 import { Button, Card, Container, Grid, Image, Text } from "@nextui-org/react";
 import { Layouts } from "../../components/layouts";
-import pokeApi from "../../api/pokeApi";
 import { PokemonFull } from "../../interfaces/pokemonFull";
 import { localFavorites } from "@/utils";
 
@@ -38,7 +37,7 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
   };
   return (
     <Layouts title={pokemon.name}>
-      <Text transform="capitalize" h1>
+      <Text css={{ marginLeft: "15px" }} transform="capitalize" h1>
         {pokemon.name}
       </Text>
       <Grid.Container
@@ -47,11 +46,11 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
         }}
         gap={2}
       >
-        <Grid xs={12} md={4}>
+        <Grid xs={12} md={5}>
           <Card isHoverable isPressable css={{ padding: "30px" }}>
             <Card.Body>
               <Card.Image
-                height={250}
+                height={350}
                 width={"100%"}
                 alt={pokemon.name}
                 src={
@@ -63,15 +62,27 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
           </Card>
         </Grid>
 
-        <Grid xs={12} sm={8}>
+        <Grid xs={12} sm={7}>
           <Card>
             <Card.Header
-              css={{ display: "flex", justifyContent: "space-between" }}
+              css={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
             >
-              <Text transform="capitalize" h1>
+              <Text
+                size={24}
+                css={{
+                  marginLeft: -3,
+                  marginRight: 10,
+                }}
+                transform="capitalize"
+                h1
+              >
                 {pokemon.name}
               </Text>
               <Button
+                size={"sm"}
                 onPress={onToggleFavorites}
                 color={isInFavorite ? "warning" : "success"}
                 ghost={!isInFavorite}
@@ -122,7 +133,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
     paths: pokemon151.map((id) => ({
       params: { id },
     })),
-    fallback: false,
+    // fallback: false,  //404 si no existe
+    fallback: "blocking",
   };
 };
 
@@ -130,10 +142,20 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params as { id: string };
   const pokemon = await getPokemonInfo(id);
 
+  if (!pokemon) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
   https: return {
     props: {
       pokemon,
-    }, // will be passed to the page component as props
+    },
+    revalidate: 86400, //60 * 60 * 24,
   };
 };
 
