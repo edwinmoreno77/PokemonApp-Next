@@ -1,4 +1,4 @@
-import { Link, Spacer, Text, useTheme } from "@nextui-org/react";
+import { Spacer, Text, useTheme } from "@nextui-org/react";
 import Image from "next/image";
 import NextLink from "next/link";
 import React from "react";
@@ -10,6 +10,8 @@ export const Navbar = () => {
     <div
       style={{
         display: "flex",
+        position: "fixed",
+        zIndex: 999,
         width: "100%",
         flexDirection: "row",
         alignItems: "center",
@@ -17,7 +19,7 @@ export const Navbar = () => {
         padding: "0 20px",
         color: theme === "dark" ? "#000" : "#fff",
         backgroundColor:
-          theme === "dark" ? "#fff" : theme?.colors.blue100.value,
+          theme === "dark" ? "#fff" : theme?.colors.blue400.value,
       }}
     >
       <Image

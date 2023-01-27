@@ -1,14 +1,15 @@
 import Head from "next/head";
 import { FC, PropsWithChildren } from "react";
 import { Navbar } from "../ui";
-
-//extender propsWithChildren para que acepte cualquier tipo de componente
+import { Sidebar } from "../ui/Sidebar";
 
 interface Props extends PropsWithChildren {
   title?: string;
 }
 
-export const Layouts: FC<Props> = ({ children, title }) => {
+const origin = typeof window === "undefined" ? "" : window.location.origin;
+
+export const Layouts: FC<Props> = ({ children, title }): JSX.Element => {
   return (
     <>
       <Head>
@@ -22,12 +23,21 @@ export const Layouts: FC<Props> = ({ children, title }) => {
           name="keywords"
           content={`${title}, pokemon, pokémon, pokedex, pokédex`}
         />
+        <meta
+          property="og:title"
+          content={`Información sobre el pokémon:${title}`}
+        />
+        <meta
+          property="og:description"
+          content={`Esta es la pagina sobre: ${title}`}
+        />
+        <meta property="og:image" content={`${origin}/img/banner.png`} />
       </Head>
-
       <Navbar />
+      <Sidebar />
       <main
         style={{
-          padding: "0 20px",
+          padding: "70px 10px 10px 70px",
         }}
       >
         {children}
